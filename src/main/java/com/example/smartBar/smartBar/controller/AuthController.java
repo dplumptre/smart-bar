@@ -49,7 +49,6 @@ public class AuthController {
                 "validation error",
                 LocalDateTime.now()
         );
-
         return new ResponseEntity<>(errorDetails, ex.getStatusCode());
 
     }

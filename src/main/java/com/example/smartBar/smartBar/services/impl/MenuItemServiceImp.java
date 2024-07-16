@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class MenuItemServiceImp implements MenuItemService {
          MenuItemEntity menuItemEntity = modelMapper.map(menuItemDto,MenuItemEntity.class);
          return modelMapper.map(menuItemRepository.save(menuItemEntity), MenuItemDto.class);
     }
+
 
     @Override
     public List<MenuItemDto> getMenuItems() {

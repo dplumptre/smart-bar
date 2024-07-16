@@ -1,6 +1,9 @@
 package com.example.smartBar.smartBar.controller;
 
 
+import com.example.smartBar.smartBar.dto.CustomerResponseDto;
+import com.example.smartBar.smartBar.dto.JwtAuthResponse;
+import com.example.smartBar.smartBar.dto.LoginDto;
 import com.example.smartBar.smartBar.dto.UserDto;
 import com.example.smartBar.smartBar.exception.ErrorDetail;
 import com.example.smartBar.smartBar.exception.ValidationError;
@@ -19,18 +22,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 @AllArgsConstructor
 public class AuthController {
 
 
     private AuthServiceImpl authService;
 
-    @PostMapping("/customer-login-or-register")
-     public ResponseEntity<ApiResponse<UserDto>> customerLoginOrRegister(@RequestBody @Valid UserDto userDto){
-        UserDto userSaved = authService.CustomerRegisterOrLogin(userDto);
+    @PostMapping("/auth/customer-login-or-register")
+     public ResponseEntity<ApiResponse<CustomerResponseDto>> customerLoginOrRegister(@RequestBody @Valid UserDto userDto){
+        CustomerResponseDto userSaved = authService.CustomerRegisterOrLogin(userDto);
          return ResponseEntity.ok(ApiResponse.create("success",userSaved));
      }
+
+    @PostMapping("/auth/admin-login")
+    public ResponseEntity<ApiResponse<JwtAuthResponse>> AdminLogin(@RequestBody @Valid LoginDto loginDto){
+        String token = authService.AdminLogin(loginDto);
+        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+        ApiResponse<JwtAuthResponse> response = ApiResponse.create("user logged in successfully",jwtAuthResponse);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/admin-area/register-admin")
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody @Valid UserDto userDto){
+        String response = authService.AdminRegister(userDto);
+        ApiResponse<String> finalResponse = ApiResponse.create("success",response);
+        return new ResponseEntity<>(finalResponse, HttpStatus.CREATED);
+    }
+
+
+
+
+
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -49,7 +74,6 @@ public class AuthController {
                 "validation error",
                 LocalDateTime.now()
         );
-
         return new ResponseEntity<>(errorDetails, ex.getStatusCode());
 
     }

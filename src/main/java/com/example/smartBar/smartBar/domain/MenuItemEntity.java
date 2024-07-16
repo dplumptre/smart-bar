@@ -23,6 +23,16 @@ public class MenuItemEntity {
     private Double price;
     private String image;
 
+
+
+
+    @Enumerated(EnumType.STRING)
+    private MenuItemEntity.Category category;
+    public enum Category {
+        FOOD, DRINKS, OTHERS
+    }
+
+
     @OneToMany(mappedBy = "menuItem")
     private List<OrderItemEntity> orderItem;
 

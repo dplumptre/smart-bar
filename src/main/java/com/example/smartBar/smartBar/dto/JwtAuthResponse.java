@@ -4,18 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuItemDto {
-Long Id;
-String name;
-double price;
-String image;
-String category;
-LocalDateTime createdAt;
-LocalDateTime updatedAt;
+public class JwtAuthResponse {
+    private String accessToken;
+    private String tokenType = "Bearer";
 }

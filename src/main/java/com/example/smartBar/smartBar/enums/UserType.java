@@ -1,4 +1,4 @@
-package com.example.smartBar.smartBar;
+package com.example.smartBar.smartBar.enums;
 
 public enum UserType {
 

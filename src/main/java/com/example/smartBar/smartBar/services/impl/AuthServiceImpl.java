@@ -1,6 +1,6 @@
 package com.example.smartBar.smartBar.services.impl;
 
-import com.example.smartBar.smartBar.UserType;
+import com.example.smartBar.smartBar.enums.UserType;
 import com.example.smartBar.smartBar.domain.UserEntity;
 import com.example.smartBar.smartBar.dto.CustomerResponseDto;
 import com.example.smartBar.smartBar.dto.LoginDto;
@@ -9,9 +9,7 @@ import com.example.smartBar.smartBar.exception.AuthException;
 import com.example.smartBar.smartBar.repository.UserRepository;
 import com.example.smartBar.smartBar.security.JwtTokenProvider;
 import com.example.smartBar.smartBar.services.AuthService;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,10 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class AuthServiceImpl implements AuthService {

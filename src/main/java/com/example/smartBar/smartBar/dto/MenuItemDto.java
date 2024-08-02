@@ -16,6 +16,7 @@ String name;
 double price;
 String image;
 String category;
+String description;
 LocalDateTime createdAt;
 LocalDateTime updatedAt;
 }

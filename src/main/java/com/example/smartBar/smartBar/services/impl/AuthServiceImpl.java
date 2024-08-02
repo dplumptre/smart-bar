@@ -1,5 +1,6 @@
 package com.example.smartBar.smartBar.services.impl;
 
+import com.example.smartBar.smartBar.controller.OrderController;
 import com.example.smartBar.smartBar.enums.UserType;
 import com.example.smartBar.smartBar.domain.UserEntity;
 import com.example.smartBar.smartBar.dto.CustomerResponseDto;
@@ -10,6 +11,8 @@ import com.example.smartBar.smartBar.repository.UserRepository;
 import com.example.smartBar.smartBar.security.JwtTokenProvider;
 import com.example.smartBar.smartBar.services.AuthService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +31,8 @@ public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider jwtTokenProvider;
 
+    Logger logger = LoggerFactory.getLogger(OrderController.class);
+
     public AuthServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
@@ -45,26 +50,32 @@ public class AuthServiceImpl implements AuthService {
         UserEntity customer = userRepository.findByPhoneNumber(userDto.getPhoneNumber())
                 .orElseGet(() -> createUserFromDto(userDto));
 
-        Authentication authentication  = authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(
-               customer.getPhoneNumber(),
-               passKey
-        ));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtTokenProvider.generateToken(authentication);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            customer.getPhoneNumber(),
+                            passKey
+                    )
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtTokenProvider.generateToken(authentication);
 
-        CustomerResponseDto newCustomer =  new CustomerResponseDto(
-                customer.getId(),
-                customer.getName(),
-                customer.getPhoneNumber(),
-                customer.getRole(),
-                token,
-                customer.getCreatedAt(),
-                customer.getUpdatedAt()
-        );
-
-
-        return    modelMapper.map( newCustomer, CustomerResponseDto.class);
+            return new CustomerResponseDto(
+                    customer.getId(),
+                    customer.getName(),
+                    customer.getPhoneNumber(),
+                    customer.getRole(),
+                    token,
+                    customer.getCreatedAt(),
+                    customer.getUpdatedAt()
+            );
+        } catch (Exception e) {
+            // Log the exception details
+            logger.info("Authentication failed for user: {}"+ customer.getPhoneNumber()+ e);
+            throw e; // Re-throw the exception to propagate the 401 response
+        }
     }
+
 
 
 

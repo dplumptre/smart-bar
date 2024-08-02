@@ -25,6 +25,7 @@ public class UserEntity {
 
 
     private String role;
+
     @OneToMany(mappedBy = "user")
     List<OrderEntity> order;
 

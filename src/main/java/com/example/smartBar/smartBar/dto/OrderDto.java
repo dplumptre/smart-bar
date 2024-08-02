@@ -1,7 +1,9 @@
 package com.example.smartBar.smartBar.dto;
 
-import com.example.smartBar.smartBar.domain.MenuItemEntity;
-import com.example.smartBar.smartBar.domain.OrderItemEntity;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
-    private List<MenuItemEntity> menuItemEntities;
+    private List<SelectedMenuDto> menuItemEntities;
     private Double totalPrice;
+    @NotNull(message = "Please provide a payment method")
+    private Long paymentMethodId;
 }

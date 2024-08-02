@@ -20,6 +20,7 @@ public class OrderEntity {
     private Long Id;
 
     private String orderReference;
+
     @Column(nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 0.00")
     private Double totalPrice;
 
@@ -29,6 +30,10 @@ public class OrderEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethodEntity paymentMethod;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

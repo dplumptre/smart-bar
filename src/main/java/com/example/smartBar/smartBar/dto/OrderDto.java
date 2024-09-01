@@ -14,8 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
+    private UserDto user;
     private List<SelectedMenuDto> menuItemEntities;
+    private String orderReference;
     private Double totalPrice;
-    @NotNull(message = "Please provide a payment method")
-    private Long paymentMethodId;
+    private PaymentMethodDto paymentMethods;
 }

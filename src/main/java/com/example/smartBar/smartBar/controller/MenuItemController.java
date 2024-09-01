@@ -58,7 +58,7 @@ public class MenuItemController {
     @GetMapping()
     public ResponseEntity<ApiResponse<List<MenuItemDto>>>getMenuItem(){
              List<MenuItemDto>  allMenuList = menuItemServiceImp.getMenuItems();
-             return new ResponseEntity<>(ApiResponse.create("list of menus",allMenuList), HttpStatus.ACCEPTED);
+             return new ResponseEntity<>(ApiResponse.create("list of menus",allMenuList), HttpStatus.OK);
 
     }
 
@@ -76,7 +76,7 @@ public class MenuItemController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<MenuItemDto>>getSingleMenuItem(@PathVariable("id") Long id){
         MenuItemDto singleMenuList = menuItemServiceImp.getSingleMenuItem(id);
-        return new ResponseEntity<>(ApiResponse.create("one menu item",singleMenuList), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(ApiResponse.create("one menu item",singleMenuList), HttpStatus.OK);
     }
 
 
@@ -93,7 +93,7 @@ public class MenuItemController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<MenuItemDto>>updateMenuItem(@PathVariable("id") Long id,@RequestBody MenuItemDto menuItem){
         MenuItemDto updatedMenuItem = menuItemServiceImp.updateMenuItem(id, menuItem);
-        return new ResponseEntity<>(ApiResponse.create("menu Item Updated Successfully",updatedMenuItem), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(ApiResponse.create("menu Item Updated Successfully",updatedMenuItem), HttpStatus.OK);
 
     }
 

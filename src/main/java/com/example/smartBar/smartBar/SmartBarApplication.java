@@ -9,6 +9,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.security.SecuritySchemes;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 
 @OpenAPIDefinition(
 		info = @Info(
@@ -19,17 +23,27 @@ import org.springframework.context.annotation.Bean;
 						name ="Ademola Plumptre",
 						email="info@overallheuristic.com",
 						url ="http://www.overallheuristic.com"
+				),
+				license = @License(
+						name = "Overall Heuristic",
+						url ="http://www.overallheuristic.com"
 				)
-//				license = @License(
-//						name = "Apache",
-//						url ="http://www.google.com"
-//				)
+		),
+		security = @SecurityRequirement(name = "bearerAuth"),
+		externalDocs = @ExternalDocumentation(
+				description = "SmartBar for developers",
+				url ="http://www.overallheuristic.com"
 		)
-//		externalDocs = @ExternalDocumentation(
-//				description = "SmartBar for developers",
-//				url ="https://www.google.com"
-//		)
 )
+@SecuritySchemes({
+		@SecurityScheme(
+				name = "bearerAuth",
+				type = SecuritySchemeType.HTTP,
+				scheme = "bearer",
+				bearerFormat = "JWT"
+		)
+})
+
 @SpringBootApplication
 public class SmartBarApplication {
 

@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface OrderService {
 
-    String makeOrder(OrderDto orderDto);
+    OrderCreationDto makeOrder(OrderDto orderDto);
 
-    List<OrderCreationDto> allOrders();
+    List<OrderDto> allOrders();
+
+    OrderDto getOrder(Long id);
 }

@@ -1,7 +1,9 @@
 package com.example.smartBar.smartBar.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -23,11 +25,9 @@ public class UserEntity {
     private String phoneNumber;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-    public enum Role {
-        ADMIN, CUSTOMER
-    }
+
+    private String role;
+
     @OneToMany(mappedBy = "user")
     List<OrderEntity> order;
 

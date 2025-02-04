@@ -12,6 +12,7 @@ public class OrderItemEntity {
     private Long Id;
     @Column(nullable = false)
     private Long quantity;
+    private Double price;
     @ManyToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order;

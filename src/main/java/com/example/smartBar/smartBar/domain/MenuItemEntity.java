@@ -22,6 +22,14 @@ public class MenuItemEntity {
     @Column(nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 0.00")
     private Double price;
     private String image;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String  description;
+    @Enumerated(EnumType.STRING)
+    private MenuItemEntity.Category category;
+    public enum Category {
+        FOOD, DRINKS, OTHERS
+    }
+
 
     @OneToMany(mappedBy = "menuItem")
     private List<OrderItemEntity> orderItem;

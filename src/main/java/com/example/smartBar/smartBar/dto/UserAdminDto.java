@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class UserAdminDto {
     private Long Id;
     @Valid
     @NotBlank(message = "Please provide a name is mandatory")
@@ -24,7 +24,8 @@ public class UserDto {
     @NotBlank(message = "Please provide a phone number is mandatory")
     @NotNull(message = "Please provide a phone number")
     private String phoneNumber;
-    @JsonIgnore
+    @NotBlank(message = "Password is required")
+    @NotNull(message = "Please provide a phone number")
     private String password;
     private String role;
     private String accessToken;

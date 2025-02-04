@@ -4,17 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemDto {
-
-    private Long Id;
-    private double price;
-    private Long quantity;
-    private Long orderId;
-    private Long menuItemId;
-
-
+public class OrderNumberDto {
+    private List <String> orderReference;
 }

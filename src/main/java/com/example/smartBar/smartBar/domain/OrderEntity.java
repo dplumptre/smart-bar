@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,15 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private String OrderReference;
+    private String orderReference;
+
+
+    @Column(nullable = true)
+    private String status;
+
+    @Column(nullable = true)
+    private LocalDateTime orderResponseTime;
+
     @Column(nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 0.00")
     private Double totalPrice;
 
@@ -29,12 +38,27 @@ public class OrderEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethodEntity paymentMethod;
+
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
 }

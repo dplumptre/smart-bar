@@ -1,5 +1,6 @@
 package com.example.smartBar.smartBar.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,12 +18,15 @@ import java.time.LocalDateTime;
 public class OrderCreationDto {
 
     private Long Id;
-    private UserDto userId;
     private String orderReference;
-    @NotNull(message = "Payment method is mandatory")
-    @Positive(message = "Payment method ID must be positive")
-    private PaymentMethodDto paymentMethodId;
     private Double totalPrice;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    private String status;
+    private LocalDateTime orderResponseTime;
+
+
+
+
+
 }

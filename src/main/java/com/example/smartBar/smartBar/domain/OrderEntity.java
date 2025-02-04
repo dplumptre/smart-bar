@@ -21,6 +21,13 @@ public class OrderEntity {
 
     private String orderReference;
 
+
+    @Column(nullable = true)
+    private String status;
+
+    @Column(nullable = true)
+    private LocalDateTime orderResponseTime;
+
     @Column(nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 0.00")
     private Double totalPrice;
 

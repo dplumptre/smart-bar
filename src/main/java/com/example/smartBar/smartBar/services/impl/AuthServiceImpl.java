@@ -1,6 +1,7 @@
 package com.example.smartBar.smartBar.services.impl;
 
 import com.example.smartBar.smartBar.controller.OrderController;
+import com.example.smartBar.smartBar.dto.UserAdminDto;
 import com.example.smartBar.smartBar.enums.UserType;
 import com.example.smartBar.smartBar.domain.UserEntity;
 import com.example.smartBar.smartBar.dto.CustomerResponseDto;
@@ -102,10 +103,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String AdminRegister(UserDto registerDto) {
+    public String AdminRegister(UserAdminDto registerDto) {
+
         if(userRepository.existsByPhoneNumber(registerDto.getPhoneNumber())){
             throw  new AuthException(HttpStatus.BAD_REQUEST, "username already exist");
         }
+
         UserEntity  user = new UserEntity();
         user.setName(registerDto.getName());
         user.setPhoneNumber(registerDto.getPhoneNumber());

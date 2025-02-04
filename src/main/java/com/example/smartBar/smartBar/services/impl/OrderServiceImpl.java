@@ -3,6 +3,7 @@ package com.example.smartBar.smartBar.services.impl;
 import com.example.smartBar.smartBar.controller.OrderController;
 import com.example.smartBar.smartBar.domain.*;
 import com.example.smartBar.smartBar.dto.*;
+import com.example.smartBar.smartBar.enums.StatusType;
 import com.example.smartBar.smartBar.exception.ResourceNotFoundException;
 import com.example.smartBar.smartBar.repository.OrderItemRepository;
 import com.example.smartBar.smartBar.repository.OrderRepository;
@@ -49,33 +50,29 @@ public class OrderServiceImpl implements OrderService{
 
 
     @Override
-    public OrderCreationDto makeOrder(OrderDto orderDto) {
+    public OrderCreationDto makeOrder(OrderDto orderDto, Long paymentMethodId) {
+
+
+        if(orderDto.getMenuItemEntities().isEmpty()){
+            throw new ResourceNotFoundException("There is no item on this order!");
+        }
 
         logger.info(String.valueOf(orderDto));
         String reference = prefix + Helper.generateRandomString(10);
         UserEntity userEntity = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername())
                 .orElseThrow( ()-> new ResourceNotFoundException("user not found!"));
-        UserDto userDto = modelMapper.map(userEntity, UserDto.class);
 
-        PaymentMethodEntity paymentMethod = paymentMethodRepository.findById(orderDto.getPaymentMethods().getId())
+        PaymentMethodEntity paymentMethod = paymentMethodRepository.findById(paymentMethodId)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment method not found!"));
-        PaymentMethodDto paymentMethodDto = modelMapper.map(paymentMethod,PaymentMethodDto.class);
 
 
-        // create order
-        OrderCreationDto order = new OrderCreationDto(
-                (Long) null,
-                userDto,
-                reference,
-                paymentMethodDto,
-                orderDto.getTotalPrice(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        OrderEntity newOrder = modelMapper.map(order, OrderEntity.class);
+        OrderEntity newOrder = modelMapper.map(orderDto, OrderEntity.class);
+        newOrder.setUser(userEntity);
+        newOrder.setOrderReference(reference);
+        newOrder.setStatus(StatusType.PENDING.name());
         newOrder.setPaymentMethod(paymentMethod);
         OrderEntity savedNewOrder = orderRepository.save(newOrder);
-        order.setId(savedNewOrder.getId());
+
 
         //  creating the orderItems
         for (SelectedMenuDto menu : orderDto.getMenuItemEntities()) {
@@ -88,7 +85,7 @@ public class OrderServiceImpl implements OrderService{
             orderItemRepository.save(orderItemEntity);
         }
 
-        return order;
+        return modelMapper.map(savedNewOrder,OrderCreationDto.class);
 
 
 
@@ -96,12 +93,13 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<OrderDto> allOrders() {
-        return orderRepository.findAll().stream()
+
+        return orderRepository.findAllByOrderByIdDesc().stream()
                 .map(order -> {
                     OrderDto orderDto = modelMapper.map(order, OrderDto.class);
                     UserDto userDto = modelMapper.map(order.getUser(), UserDto.class);
                     PaymentMethodDto paymentMethodDto = modelMapper.map(order.getPaymentMethod(), PaymentMethodDto.class);
-                    orderDto.setPaymentMethods(paymentMethodDto);
+                    orderDto.setPaymentMethod(paymentMethodDto);
                     List<SelectedMenuDto> selectedMenuDtos = order.getOrderItems().stream()
                             .map(orderItem -> {
                                 MenuItemEntity menuItem = orderItem.getMenuItem();
@@ -127,6 +125,15 @@ public class OrderServiceImpl implements OrderService{
 
 
     @Override
+    public List<String> allOrderNumbers() {
+        return orderRepository.findAll().stream()
+                .map(order -> order.getOrderReference()) // Directly map to String (order reference)
+                .collect(Collectors.toList());
+    }
+
+
+
+    @Override
     public OrderDto getOrder(Long id) {
         OrderEntity orderEntity = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
         OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
@@ -134,7 +141,7 @@ public class OrderServiceImpl implements OrderService{
         // Get Payment Method
         PaymentMethodEntity paymentMethod = orderEntity.getPaymentMethod();
         if (paymentMethod != null) {
-            orderDto.setPaymentMethods(modelMapper.map(paymentMethod,PaymentMethodDto.class));
+            orderDto.setPaymentMethod(modelMapper.map(paymentMethod,PaymentMethodDto.class));
         }
 
         List<SelectedMenuDto> selectedMenuDtos = orderEntity.getOrderItems().stream()
@@ -153,5 +160,22 @@ public class OrderServiceImpl implements OrderService{
 
         return orderDto;
     }
+
+    @Override
+    public List<OrderCreationDto> getOrdersByUserAndStatus(Long userId) {
+        UserEntity user =userRepository.findById(userId).orElseThrow( () -> new ResourceNotFoundException("user was not found"));
+        List<OrderEntity> orders = orderRepository.findByUserAndStatus(user, StatusType.PENDING.name());
+        return orders.stream().map( order -> modelMapper.map(order,OrderCreationDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderCreationDto updateOrderStatus(Long orderId, OrderCreationDto status) {
+         OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow( () -> new ResourceNotFoundException("Order was not found"));
+         orderEntity.setStatus(status.getStatus());
+         orderEntity.setOrderResponseTime(LocalDateTime.now());
+         orderRepository.save(orderEntity);
+         return modelMapper.map(orderEntity,OrderCreationDto.class);
+    }
+
 
 }

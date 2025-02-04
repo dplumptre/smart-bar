@@ -61,6 +61,8 @@ public class SpringSecurityConfig {
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.requestMatchers(HttpMethod.GET, "/api/menu-items", "/api/menu-items/**").permitAll();
                     authorize.requestMatchers(HttpMethod.GET,"/api/payment-methods").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST,"/api/admin-area/register-admin").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET,"/api/orders/get-all-order-numbers").permitAll();
                     authorize.requestMatchers(
                             "/v2/api-docs",             // Swagger API documentation
                             "/swagger-resources/**",    // Swagger resources

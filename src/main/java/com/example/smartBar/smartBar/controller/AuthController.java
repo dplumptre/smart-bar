@@ -1,10 +1,7 @@
 package com.example.smartBar.smartBar.controller;
 
 
-import com.example.smartBar.smartBar.dto.CustomerResponseDto;
-import com.example.smartBar.smartBar.dto.JwtAuthResponse;
-import com.example.smartBar.smartBar.dto.LoginDto;
-import com.example.smartBar.smartBar.dto.UserDto;
+import com.example.smartBar.smartBar.dto.*;
 import com.example.smartBar.smartBar.exception.ErrorDetail;
 import com.example.smartBar.smartBar.exception.ValidationError;
 import com.example.smartBar.smartBar.response.ApiResponse;
@@ -83,8 +80,8 @@ public class AuthController {
             description = "HTTP STATUS 201"
     )
     @PostMapping("/admin-area/register-admin")
-    public ResponseEntity<ApiResponse<String>> register(@RequestBody @Valid UserDto userDto){
-        String response = authService.AdminRegister(userDto);
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody @Valid UserAdminDto userAdminDto){
+        String response = authService.AdminRegister(userAdminDto);
         ApiResponse<String> finalResponse = ApiResponse.create("success",response);
         return new ResponseEntity<>(finalResponse, HttpStatus.CREATED);
     }
